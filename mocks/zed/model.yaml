@@ -1,0 +1,14 @@
+group: mock.digi.dev
+version: v1
+kind: Zed
+data:
+  input:
+    location: string
+    format: string
+    zql: string
+  output:
+    location: string
+    format: string
+    result: string
+obs:
+  reason: string

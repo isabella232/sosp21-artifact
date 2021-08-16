@@ -1,0 +1,8 @@
+group: mock.digi.dev
+image: silveryfu/cam:latest
+imagepull: Always
+mounter: false
+name: cam
+namespace: default
+plural: cams
+version: v1

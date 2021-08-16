@@ -1,0 +1,8 @@
+name: sample
+namespace: default
+group: mock.digi.dev
+version: v1
+plural: samples
+
+image: silveryfu/sample:latest
+imagepull: Always

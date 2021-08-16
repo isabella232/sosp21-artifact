@@ -1,0 +1,8 @@
+apiVersion: mock.digi.dev/v1
+kind: MotionSensor
+metadata:
+  name: {{ .Values.name }}
+spec:
+  control:
+    sensitivity:
+      intent: 1

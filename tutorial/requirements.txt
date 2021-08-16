@@ -1,0 +1,3 @@
+notebook
+jupyterthemes
+hide_code

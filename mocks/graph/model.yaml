@@ -1,0 +1,14 @@
+group: digi.dev
+version: v1
+kind: DigiGraph
+meta:
+  :
+    openapi:
+      additionalProperties:
+        properties:
+          power:
+            type: string
+          brightness:
+            type: number
+        type: object
+      type: object

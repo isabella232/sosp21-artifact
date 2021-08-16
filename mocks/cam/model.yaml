@@ -1,0 +1,9 @@
+group: mock.digi.dev
+version: v1
+kind: Cam
+control:
+  angle: number
+  endpoint: string
+  sensitivity: number
+obs:
+  reason: string

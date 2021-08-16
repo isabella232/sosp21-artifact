@@ -1,0 +1,8 @@
+group: mock.digi.dev
+image: silveryfu/roomba:latest
+imagepull: Always
+mounter: false
+name: roomba
+namespace: default
+plural: roombas
+version: v1

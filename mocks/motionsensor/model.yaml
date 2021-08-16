@@ -1,0 +1,9 @@
+group: mock.digi.dev
+version: v1
+kind: MotionSensor
+control:
+  sensitivity: number
+obs:
+  last_triggered_time: number
+  battery_level: string
+  reason: string

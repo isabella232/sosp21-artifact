@@ -1,0 +1,10 @@
+group: mock.digi.dev
+version: v1
+kind: SampleLake
+data:
+  input:
+    url: string
+  output:
+    occupied: boolean
+obs:
+  reason: string

@@ -1,0 +1,8 @@
+group: mock.digi.dev
+image: silveryfu/motionsensor:latest
+imagepull: Always
+mounter: false
+name: motionsensor
+namespace: default
+plural: motionsensors
+version: v1

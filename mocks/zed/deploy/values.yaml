@@ -1,0 +1,8 @@
+group: mock.digi.dev
+image: silveryfu/zed:latest
+imagepull: Always
+mounter: false
+name: zed
+namespace: default
+plural: zeds
+version: v1

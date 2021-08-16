@@ -1,0 +1,11 @@
+Metadata-Version: 1.2
+Name: digi
+Version: 0.1.6
+Summary: dSpace driver library
+Home-page: UNKNOWN
+Author: Silvery Fu
+Author-email: silveryfu@gmail.com
+License: Apache 2.0
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.7
