@@ -52,10 +52,10 @@ You can also pick a digi to run from the mock digis /mocks (ones that do not nee
 - Use `kubectl edit rooms r1` to update the brightness of the room.
 
 **Customize policies:**
-- Create composition policies: 
-- Create on-model policies: see 
+- Create composition policies: see example [yield policy](https://github.com/digi-project/sosp21-artifact/blob/master/runtime/policy/deploy/mocks/crs/mock_yield.yaml).
+- Create on-model policies: see the [tutorial notebook](https://github.com/digi-project/sosp21-artifact/blob/master/tutorial/tutorial-key.ipynb).
 
-> Note: We provide prebuilt jupyter notebook to walkthrough the above steps. Try 
+> Note: we provide a prebuilt jupyter notebook to walkthrough the above steps. The notebook can be found and set up using the AWS VM image ami-0619512862a004fdf. We may have a few live notebook instances running, feel free to contact silvery@eecs.berkeley.edu to obtain access to them.
 
 ### dSpace Setup
 
@@ -71,32 +71,61 @@ Other code / documents that can be useful for this artifact are the device stubs
 
 > Note: to build the dSpace controllers and dq that are Go source, you may need to pull / copy / link this repo under the $GOPATH/src/digi.dev/dspace. That is, create the directories digi.dev/dspace under $GOPATH and copy the content of this repo there and run the `make` commands in that repo.
 
-> Note: the dq command line in this artifact relies on the /mocks/Makefile to function properly. When you try to run / build / compose / ... digis, make sure you run dq in the directory /mocks.
-
 ### Digi Development
-
-#### Concepts
 
 **Digi:** The basic building block in dSpace is called *digi*. Each digi has a *model* and a *driver*. A model consists of attribute-value pairs organized in a document (JSON) following a predefined *schema*. The model describes the desired and the current states of the digi; and the goal of the digi's driver is to take actions that reconcile the current states to the desired states.
 
 **Programming driver:** Each digi's driver can only access its own model (think of it as the digi's "world view"). Programming a digi is conceptually very simple - manipulating the digi's model/world view (essentially a JSON document) plus any other actions to affect the external world (e.g., send a signal to a physical plug, invoke a web API, send a text messages to your phone etc.). The dSpace's runtime will handle the rest, e.g., syncing states between digis' world views when they are composed.
 
-To create a digi, in the /mocks directory, create a XYZ with a model.yaml and run XYZ to create a boilerplate.
+Example `Room` digivice:
+```python
+from digi import on
+from digi.view import TypeView, DotView
 
-To build: TBD
-To push: TBD
+# invoked upon mount or control attributes changes
+@on.mount
+@on.control
+def handle_brightness(model):  
+    # chained transformation of model
+    with TypeView(model) as tv, DotView(tv) as dv: 
+      
+        # control attribute for room brightness 
+        rb = dv.room.control.brightness        
+        
+        # if no lamps brightness status set to 0
+        rb.status = 0
+        if "lamps" not in dv:
+            return
+          
+        # count active lamps
+        active_lamps = [l for _, l in dv.lamps.items() 
+                    if l.control.power.status == "on"]
+        
+        # iterate and set active lamp brightness
+        for lamp in active_lamps:
+            # room brightness is the sum of all lamps
+            room_brightness.status += \
+            lamp.control.brightness.status 
+            
+            # divide intended brightness across lamps
+            lamp.control.brightness.intent = \
+            room_brightness.intent / len(active_lamps)
+            
+    # At the closing of the "with" clause, changes on 
+    # DotView will be applied to the TypeView and then 
+    # to the model.
 
-**Mock digis.** `/mocks` contains example digis that cover most of the scenarios at S6.2 and can be run/tested *without* actual physical devices.
+if __name__ == '__main__':
+    digi.run()
+```
 
-**Tutorial notebook.** We prepared a jupyter notebook
+**Build and run:** After defining the digi's schema and programing its driver, developers can build a *digi image* and push it to a digi repository for distributiton. Users can then pull the digi image, run it on dSpace, and interact with the digi by updating its model, e.g., specifies its desired states.
+
+To create, build, push, and run digis, refer to the [QuickStart](#quickstart).
+
+**Mock digis.** `/mocks` contains example digis that cover some of the scenarios at S6.2 that can be run/tested *without* actual physical devices.
 
 **Device stubs.** `/stub` includes examples on interacting with physical devices and data frameworks, e.g., tuyapi, lifx, object recognition on video stream etc.
-
-### Run-time Operations
-
-Run/stop digis: TBD
-Update intents: TBD
-Composition: TBD
 
 #### Using Dq
 
@@ -129,14 +158,7 @@ Flags:
 Use "dq [command] --help" for more information about a command.
 ```
 
-#### Composition. 
-Use kubectl to do XYZ
-
-#### Customization - policies.
-
-**Define on-model policies.** See example in: XYZ
-
-**Define composition policies.** See example in: XYZ
+> Note: the dq command line in this artifact relies on the /mocks/Makefile to function properly. When you try to run / build / compose / ... digis, make sure you run dq in the directory /mocks.
 
 ### Benchmark
 
@@ -208,4 +230,3 @@ human input --> | room -- lamp ---- |-- lifx lamp -> actuate
 
 
 > Contact silvery@eecs.berkeley.edu if you have questions and suggestions.
-
