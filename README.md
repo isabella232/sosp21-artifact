@@ -11,11 +11,11 @@ This artifact lays out the source code and experiment setup for the ACM SOSP 202
 
 ### QuickStart
 
-The TLDR on setting up dSpace components, building digsi, composing digis, and customizing policies. The rest of details are described in the following sections.
+This is the TLDR for setting up dSpace components, building, composing, and customizing digis. The rest of the details are described in the following sections.
 
 **Installations:**
 - Kubernetes: install [minikube](https://minikube.sigs.k8s.io/docs/start/), [kubectl](https://kubernetes.io/docs/tasks/tools/), [helm](https://helm.sh/), and [kubectl-neat](https://github.com/silveryfu/kubectl-neat).
-- dSpace: clone this repo under your GOPATH and rename the directory to dspace, i.e., `$GOPATH/src/digi.dev/dspace/REPO_ROOT`. Then, build dSpace commandline dq with `make dq` and install digi library: `cd ./runtime/driver/digi/; pip install -e .`
+- dSpace: clone this repo under your GOPATH and rename the directory to dspace, i.e., change from `$GOPATH/src/digi.dev/sosp21-artifact/` to `$GOPATH/src/digi.dev/dspace/`. Then, build dSpace commandline dq with `make dq` and install digi library: `cd ./runtime/driver/digi/; pip install -e .`
 
 **Start the runtime:**
 - Run minikube with `minikube start`.
@@ -38,13 +38,12 @@ The TLDR on setting up dSpace components, building digsi, composing digis, and c
   ```
 - Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image).
 - Edit the `./tv/driver/handler.py` to add driver logic/policies. An intro to digi driver programming is covered in the [tutorial notebook](https://github.com/digi-project/sosp21-artifact/blob/master/tutorial/tutorial-key.ipynb). For now, we can leave the template handler.py unchanged (so it does nothing upon reconciliation). 
-- Run `dq build tv` to build the digi image. It might take a while (constructing the driver's docker image). 
-- Run `dq push tv` to push the image to remote docker repo.
+- Run `dq build tv` to build the digi image. It might take a while (constructing the driver's docker image); `dq push tv` to push the image to remote docker repo.
 - Run `dq run tv t1` to run a digi `t1` of kind tv.
-- Run `kubectl get tvs` and `kubectl edit tvs t1` to edit the intent (i.e., `contorl.power.intent`) of the tv.
-- Run `dq stop tv t1` to stop the digi.
+- `kubectl get tvs` and `kubectl edit tvs t1` to edit the intent (i.e., `contorl.power.intent`) of the tv.
+- `dq stop tv t1` to stop the digi.
 You can also pick a digi to run from the mock digis /mocks (ones that do not need physical devices to run and test).
-- E.g., `dq run lamp t1`. 
+- E.g., `dq run lamp l1`. 
 
 **Compose digis:**
 - Start the mock lamp and room in /mocks with `dq run lamp l1` and `dq run room r1`
@@ -119,13 +118,11 @@ if __name__ == '__main__':
     digi.run()
 ```
 
+### Run-time Operations
+
 **Build and run:** After defining the digi's schema and programing its driver, developers can build a *digi image* and push it to a digi repository for distributiton. Users can then pull the digi image, run it on dSpace, and interact with the digi by updating its model, e.g., specifies its desired states.
 
-To create, build, push, and run digis, refer to the [QuickStart](#quickstart).
-
-**Mock digis.** `/mocks` contains example digis that cover some of the scenarios at S6.2 that can be run/tested *without* actual physical devices.
-
-**Device stubs.** `/stub` includes examples on interacting with physical devices and data frameworks, e.g., tuyapi, lifx, object recognition on video stream etc.
+To create, build, push, run, and compose digis, refer to the [QuickStart](#quickstart).
 
 #### Using Dq
 
@@ -157,6 +154,10 @@ Flags:
 
 Use "dq [command] --help" for more information about a command.
 ```
+
+**Mock digis.** `/mocks` contains example digis that cover some of the scenarios at S6.2 that can be run/tested *without* actual physical devices.
+
+**Device stubs.** `/stub` includes examples on interacting with physical devices and data frameworks, e.g., tuyapi, lifx, object recognition on video stream etc.
 
 > Note: the dq command line in this artifact relies on the /mocks/Makefile to function properly. When you try to run / build / compose / ... digis, make sure you run dq in the directory /mocks.
 
