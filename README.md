@@ -34,7 +34,7 @@ The TLDR on setting up dSpace components, building digsi, composing digis, and c
   version: v1
   kind: TV
   control:
-  	power: string
+    power: string
   ```
 - Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image).
 - Edit the `./tv/driver/handler.py` to add driver logic/policies. An intro to digi driver programming is covered in the [tutorial notebook](https://github.com/digi-project/sosp21-artifact/blob/master/tutorial/tutorial-key.ipynb). For now, we can leave the template handler.py unchanged (so it does nothing upon reconciliation). 
