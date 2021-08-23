@@ -39,6 +39,7 @@ Here is the TLDR for setting up dSpace components and building, composing, and c
 - Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image).
 - Edit the `./tv/driver/handler.py` to add driver logic/policies. An intro to digi driver programming can be found in the [tutorial notebook](https://github.com/digi-project/sosp21-artifact/blob/master/tutorial/tutorial-key.ipynb). For now, we can just leave the template handler.py unchanged (the digi will do nothing upon reconciliation). 
 - Run `dq build tv` to build the digi image. It might take a while (constructing the driver's docker image), followed by `dq push tv`to push the image to a remote docker repo. You can configure minikube and docker runtime to use local container registry (see [here](https://stackoverflow.com/questions/42564058/how-to-use-local-docker-images-with-minikube)).
+
 **Run the digi:**
 - Run `dq run tv t1` to run a digi `t1` of kind TV.
 - `kubectl get tvs` and `kubectl edit tvs t1` to edit the intent (i.e., `control.power.intent`) of the tv.
