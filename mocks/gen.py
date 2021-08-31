@@ -292,7 +292,7 @@ def gen(name):
                     yaml.dump(cr, f_)
 
         # deployment cr
-        _gen_cr("deploy", name_="\\{\\{ .Values.name \\}\\}")
+        _gen_cr("deploy", name_="{{ .Values.name }}")
 
         # testing cr
         _gen_cr("test", name_=model["kind"].lower() + "-test")

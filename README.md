@@ -28,6 +28,7 @@ Here is the TLDR for setting up dSpace components and building, composing, and c
   override REPO = YOUR_DOCKERHUB_ACCOUNT
   endif
   ```
+  
 - Create a directory and a digi schema model.yaml in it. The name of the directory must match the digi's kind. An example ./tv/model.yaml for a digi schema `TV`:
   ```yaml
   group: digi.dev
@@ -36,16 +37,27 @@ Here is the TLDR for setting up dSpace components and building, composing, and c
   control:
     power: string
   ```
-- Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image).
+  
+- Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image). 
+
+- Edit the `./tv/deploy/cr.yaml` to update the power's intent; e.g.,
+
+  ```yaml
+	spec:
+  control:
+    power:
+      intent: "off"
+  ```
+
 - Edit the `./tv/driver/handler.py` to add driver logic/policies. An intro to digi driver programming can be found in the [tutorial notebook](https://github.com/digi-project/sosp21-artifact/blob/master/tutorial/tutorial-key.ipynb). For now, we can just leave the template handler.py unchanged (the digi will do nothing upon reconciliation). 
+
 - Run `dq build tv` to build the digi image. It might take a while (constructing the driver's docker image), followed by `dq push tv`to push the image to a remote docker repo. You can configure minikube and docker runtime to use local container registry (see [here](https://stackoverflow.com/questions/42564058/how-to-use-local-docker-images-with-minikube)).
 
 **Run the digi:**
 - Run `dq run tv t1` to run a digi `t1` of kind TV.
 - `kubectl get tvs` and `kubectl edit tvs t1` to edit the intent (i.e., `control.power.intent`) of the tv.
 - `dq stop tv t1` to stop the digi.
-You can also pick a digi from the mock digis /mocks (ones that do not need physical devices to run and test).
-- E.g., `dq run lamp l1`. 
+You can also pick a digi from the mock digis /mocks (ones that do not need physical devices to run and test). E.g., `dq run lamp l1`. 
 
 **Compose digis:**
 - Start the mock lamp and room in /mocks with `dq run lamp l1` and `dq run room r1`
