@@ -84,7 +84,7 @@ def patch():
     while len(crds) > 0:
         _gvr = None
         for _gvr, crd in crds.items():
-            if _gvr in crd_deps:
+            if _gvr in crd_deps and len(crd_deps[_gvr]) != 0:
                 continue
             break
         assert _gvr
