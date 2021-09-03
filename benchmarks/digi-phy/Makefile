@@ -18,10 +18,6 @@ ifndef TAG
 override TAG = bench
 endif
 
-ifndef IMAGEBUILD
-override IMAGEBUILD =
-endif
-
 
 kc := kubectl
 digi_src := $(GOPATH)/src/digi.dev/dspace
@@ -67,14 +63,13 @@ test: | model all
 prepare:
 	rm -r $(build_dir) >/dev/null 2>&1 || true
 	mkdir -p $(build_dir)/deploy/
-	rsync -r $(driver_dir) $(build_dir) || true
 	rsync -r $(driver_dir)/deploy $(build_dir) || true
 	rsync -r $(driver_dir)/requirements.txt $(build_dir) || true
 
 .PHONY: build
 build: | prepare gen patch
 	rsync $(driver_handler) $(build_dir)/ || true
-	cd $(build_dir); docker build $(IMAGEBUILD) -t $(REPO)/$(KIND):$(TAG) -f deploy/image/Dockerfile . || true
+	cd $(build_dir); docker build -t $(REPO)/$(KIND):$(TAG) -f deploy/image/Dockerfile . || true
 	docker push $(REPO)/$(KIND):$(TAG)|| true
 	rm -r $(build_dir) || true
 
