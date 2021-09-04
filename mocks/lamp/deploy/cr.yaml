@@ -4,7 +4,5 @@ metadata:
   name: {{ .Values.name }}
 spec:
   control:
-    power:
-      intent: "off"
-    brightness:
-      intent: 0.8
+    brightness: -1
+    power: -1

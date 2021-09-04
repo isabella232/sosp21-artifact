@@ -39,7 +39,7 @@ schema:
       metadata:
         type: object
       spec:
-        properties: 
+        properties:
         type: object
     type: object
 served: true
@@ -48,7 +48,7 @@ storage: true
 
 _meta = """
 meta:
-  properties: 
+  properties:
   type: object
 """
 _meta_attr = """
@@ -57,13 +57,13 @@ type: {datatype}
 
 _control = """
 control:
-  properties: 
+  properties:
   type: object
 """
 _control_attr = """
 properties:
   intent:
-    type: {datatype} 
+    type: {datatype}
   status:
     type: {datatype}
 type: object
@@ -140,7 +140,7 @@ metadata:
 
 _helm_values = """
 name: {name}
-namespace: {namespace} 
+namespace: {namespace}
 group: {group}
 version: {version}
 plural: {plural}
@@ -177,7 +177,7 @@ def h():
 @on.control
 def h():
     ...
-    
+
 
 if __name__ == '__main__':
     digi.run()
@@ -291,8 +291,14 @@ def gen(name):
                     # TBD add plain-write
                     yaml.dump(cr, f_)
 
+                # XXX
+                with open(cr_file, "r+") as f_:
+                    _s = f_.read().replace("'{", "{").replace("}'", "}")
+                    f_.seek(0); f_.truncate()
+                    f_.write(_s)
+
         # deployment cr
-        _gen_cr("deploy", name_="{{ .Values.name }}")
+        _gen_cr("deploy", name_="'{{ .Values.name }}'")
 
         # testing cr
         _gen_cr("test", name_=model["kind"].lower() + "-test")
