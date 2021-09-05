@@ -8,14 +8,14 @@ ifndef NAME
 override NAME = lamp
 endif
 
-.PHONY: graph stop run
+.PHONY: measure graph stop run
 measure:
 	cd digis/measure; \
 	kubectl apply -f crd.yaml; \
-	kubectl apply -f test/cr.yaml
+	kubectl apply -f test/cr.yaml; \
+	cd ../; dq run lamp lamp-test
 graph: | measure
 	# construct digi-graph
-	# assume the lamp is already running
 	cd digis; \
 	dq run room room-test && sleep 5 && \
 	dq mount lamp-test room-test; sleep 1; \

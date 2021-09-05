@@ -58,6 +58,7 @@ def benchmark_lamp(root_intent=LAMP_INTENT, skip_result=False):
 
     # wait until results are ready
     while True:
+
         if all(v is not None and v > 0 for k, v in measure.items()):
             break
 
