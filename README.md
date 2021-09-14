@@ -22,7 +22,7 @@ Here is the TLDR for setting up dSpace components and building, composing, and c
 - Run dSpace controllers: `cd ./runtime/sync; make run; cd ../policy; make run`.
 
 **Build a digi:**
-- `cd ./mocks` -- all the commands below assume they are run under `./mocks` (or it can be any directory that contains the `Makefile` in it). Update the `REPO` parameter in the Makefile to your own container hub repository (e.g., dockerhub).
+- `cd ./mocks` -- all the commands below assume they are run under `./mocks` (or it can be any directory that contains the `Makefile` in it). Update the `n` parameter in the Makefile to your own container hub repository (e.g., dockerhub or [local repo with minikube](https://stackoverflow.com/questions/42564058/how-to-use-local-docker-images-with-minikube)).
   ```Makefile
   ifndef REPO
   override REPO = YOUR_DOCKERHUB_ACCOUNT
@@ -38,7 +38,7 @@ Here is the TLDR for setting up dSpace components and building, composing, and c
     power: string
   ```
   
-- Run `make gen KIND=TV` to generate its configuration files and scripts (they are packaged as the digi image). 
+- Run `make gen KIND=tv` to generate its configuration files and scripts (they are packaged as the digi image). 
 
 - Edit the `./tv/deploy/cr.yaml` to update the power's intent; e.g.,
 
@@ -76,12 +76,13 @@ You can also pick a digi from the mock digis /mocks (ones that do not need physi
 
 **dSpace controllers.** Two dSpace controllers are used in this artifact: the [syncer](https://github.com/digi-project/sosp21-artifact/tree/master/runtime/sync) and [policer](dspace/runtime/policy). Use the Makefile (`make run`) in their directory to run the controllers. They will be deployed using the prebuilt docker images. The `mounter` dSpace controller will run as part of the example digis (see [mock digis](#digi-development)).  
 
-**Digi library in Python.** Install the dev release from the repo `cd ./runtime/driver/digi/; pip install -e .` Or from PyPI: `pip install digi=0.1.6`. The library is used in [digi development](#digi-development).
+**Digi library in Python.** Install the dev release from the repo `cd ./runtime/driver/; pip install -e .` Or from PyPI: `pip install digi=0.1.6`. The library is used in [digi development](#digi-development).
 
-**dSpace CLI (dq).** Run `make dq` to install the dev release with the /Makefile in this repo. The dSpace command line includes APIs for composition, digi aliasing, and image management etc. It is to be used  jointly with `kubectl` at running time (see [run-time operation](#runtime-operations)).
+**dSpace CLI (dq).** Run `make dq` to install the dev release with the /Makefile in this repo. The dSpace command line includes APIs for composition, digi aliasing, and image management etc. It is to be used jointly with `kubectl` at running time (see [run-time operation](#runtime-operations)).
 
 Other code / documents that can be useful for this artifact are the device stubs and the tutorial notebook which we will cover in what follows. 
 
+> Note: the codegen in the CLI requires python version >= 3.7 (on your local machine).
 > Note: to build the dSpace controllers and dq that are Go source, you may need to pull / copy / link this repo under the $GOPATH/src/digi.dev/dspace. That is, create the directories digi.dev/dspace under $GOPATH and copy the content of this repo there and run the `make` commands in that repo.
 
 ### Digi Development
@@ -177,7 +178,9 @@ Use "dq [command] --help" for more information about a command.
 
 ### Benchmark
 
-Below are instructions to replicate the setup and results in "S6.5 Performance Benchmarks" in the paper. The scripts used in this setup can be found in [/benchmarks](https://github.com/digi-project/sosp21-artifact/blob/master/benchmarks/Makefile).
+Below are instructions to replicate the setup and results in "S6.5 Performance Benchmarks" in the paper. The scripts used in this setup can be found in [/benchmarks](https://github.com/digi-project/sosp21-artifact/blob/master/benchmarks/Makefile). 
+
+> Note: the benchmarks require using a customized version of kopf `git clone https://github.com/silveryfu/kopf.git; cd kopf; git checkout low-lat; pip install -e .`
 
 #### Local setup
 ```
